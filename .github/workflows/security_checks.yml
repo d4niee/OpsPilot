@@ -1,0 +1,23 @@
+name: Security Checks
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  owasp_dependency_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        run: |
+          echo run owasp dep check for the frontend
+
+  upload_owasp_results:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        run: |
+          upload results for the frontend
