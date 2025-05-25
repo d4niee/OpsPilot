@@ -8,20 +8,31 @@ on:
 jobs:
   train_model:
     runs-on: ubuntu-latest
-    container:
-      image: python:3.10-slim-bullseye
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install system dependencies
-        run: |
-          apt-get update
-          apt-get install -y git
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.9'
 
-      - name: Install Poetry
-        run: pip install poetry
+      - name: Cache Poetry & pip
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pypoetry
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Install Poetry & configure venv
+        run: |
+          pip install poetry
+          poetry config virtualenvs.in-project true
 
       - name: Install dependencies
         run: poetry install --no-root
