@@ -23,7 +23,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.10.9'
 
       - name: Install Poetry
         run: pip install poetry
@@ -42,6 +42,22 @@ jobs:
 #          name: models
 #          path: models/
 #          retention-days: 7
+  publish_model:
+    name: Publish Latest Model as Release Asset
+    needs: train_model
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create or update "model-latest" release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: model-latest
+          release_name: "Latest Trained Model"
+          files: |
+            models/**
+          overwrite: true
 
   push_rasa_image:
     name: Push Rasa API Image to GHCR
