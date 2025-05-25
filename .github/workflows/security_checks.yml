@@ -11,13 +11,32 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        run: |
-          echo run owasp dep check for the frontend
 
-  upload_owasp_results:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Set up Java (for OWASP Dependency-Check)
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Download OWASP Dependency-Check CLI
         run: |
-          upload results for the frontend
+          VERSION=8.4.1
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v${VERSION}/dependency-check-${VERSION}-release.zip
+          unzip dependency-check-${VERSION}-release.zip -d dependency-check
+
+      - name: Run OWASP Dependency-Check
+        run: |
+          mkdir -p owasp-report
+          ./dependency-check/bin/dependency-check.sh \
+            --project "frontend" \
+            --scan ./frontend \
+            --format "HTML" \
+            --format "XML" \
+            --format "JSON" \
+            --out owasp-report
+
+      - name: Upload OWASP reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: owasp-reports
+          path: owasp-report/
