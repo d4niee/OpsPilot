@@ -2,7 +2,7 @@
 
 COMMIT_HASH=$(git rev-parse --short HEAD)
 
-MODEL_NAME="latest-${COMMIT_HASH}.tar.gz"
+MODEL_NAME="opspilot-latest-model.tar.gz"
 MODEL_PATH="models/${MODEL_NAME}"
 
 echo "🚀 Training model..."

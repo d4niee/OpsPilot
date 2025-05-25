@@ -46,10 +46,6 @@ jobs:
           chmod +x scripts/train_model.sh
           ./scripts/train_model.sh
 
-      - name: retag model
-        run: |
-          mv models/*.tar.gz models/opspilot-latest-model.tar.gz
-
   publish_model:
     name: Publish Latest Model as Release Asset
     needs: train_model
