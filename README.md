@@ -1,3 +1,8 @@
+[![Train & Publish Model/API](https://github.com/d4niee/OpsPilot/actions/workflows/build.yml/badge.svg)](https://github.com/d4niee/OpsPilot/actions/workflows/build.yml)
+[![🤖 Build & Push Backend Services](https://github.com/d4niee/OpsPilot/actions/workflows/build_and_push_backend.yml/badge.svg)](https://github.com/d4niee/OpsPilot/actions/workflows/build_and_push_backend.yml)
+[![🤖 Build & Push Frontend Service](https://github.com/d4niee/OpsPilot/actions/workflows/build_and_push_frontend.yml/badge.svg)](https://github.com/d4niee/OpsPilot/actions/workflows/build_and_push_frontend.yml)
+[![Security Checks](https://github.com/d4niee/OpsPilot/actions/workflows/security_checks.yml/badge.svg)](https://github.com/d4niee/OpsPilot/actions/workflows/security_checks.yml)
+
 # OpsPilot
 OpsPilot is a Rasa Chatbot designed to generate dockerfiles, K8s Manifests and Pipeline Templates
 intelligent, conversation-based chatbot to support developers in DevOps tasks - self-hosted, extensible and specialized in infrastructure-as-code, CI/CD and containerization.
