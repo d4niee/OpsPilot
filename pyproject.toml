@@ -1,0 +1,21 @@
+[project]
+name = "OpsPilot"
+version = "0.1.0"
+description = "OpsPilot"
+authors = [
+    {name = "Daniel Lambrecht",email = "daniellambrecht10@gmail.com"}
+]
+package-mode = false
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.8,<3.11"
+dependencies = [
+    "rasa (>=3.6.21,<4.0.0)",
+    "jinja2 (>=3.1.6,<4.0.0)",
+    "pyyaml (>=6.0.2,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

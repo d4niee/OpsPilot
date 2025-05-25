@@ -1,0 +1,30 @@
+version: '3.0'
+services:
+
+  # Rasa core services
+  rasa:
+    image: rasa/rasa:3.6.21-full
+    ports:
+      - 5005:5005
+    volumes:
+      - ./:/app
+    command: ["run", "--enable-api", "--cors", "*"]
+
+  action-server:
+    ports:
+      - 5055:5055
+    container_name: rasa-action-server
+    build:
+      context: .
+      dockerfile: Dockerfile.actions
+
+  rasa-frontend:
+    container_name: rasa-frontend
+    build:
+      context: ./frontend 
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - 8080:80
+    depends_on:
+      - rasa

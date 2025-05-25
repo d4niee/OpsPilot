@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ Values.app.name }}
+  labels:
+    app: {{ kubernetes_app_name }}
+spec:
+  replicas: {{ replicas | default(1) }}
+  selector:
+    matchLabels:
+      app: {{ kubernetes_app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ kubernetes_app_name }}
+    spec:
+      containers:
+        - name: {{ kubernetes_app_name }}
+          image: {{ image }}
+          ports:
+            - containerPort: {{ container_port | default(80) }}
+          {% if env_vars %}
+          env:
+            {% for key, value in env_vars.items() %}
+            - name: {{ key }}
+              value: "{{ value }}"
+            {% endfor %}
+          {% endif %}
+          {% if kubernetes_secret_enabled | default(false) %}
+          envFrom:
+            - secretRef:
+                name: {{ secret_name }}
+          {% endif %}
+          {% if kubernetes_no_root_enabled | default(false) %}
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+          {% endif %}
+          resources:
+            limits:
+              cpu: {{ kubernetes_cpu_max | default('500m') }}
+              memory: {{ memory_limit | default('512Mi') }}
+            requests:
+              cpu: {{ kubernetes_mem_req | default('250m') }}
+              memory: {{ kubernetes_mem_max | default('256Mi') }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ kubernetes_app_name }}
+  labels:
+    app: {{ kubernetes_app_name }}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ kubernetes_app_name }}
+  ports:
+    - port: {{ container_port }}
+      targetPort: {{ container_port }}

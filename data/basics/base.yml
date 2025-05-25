@@ -1,0 +1,116 @@
+version: "3.1"
+nlu:
+- intent: ask_name
+  examples: |
+    - what's your name?
+    - who are you?
+    - tell me your name
+    - how do I call you?
+    - may I know your name?
+    - could you introduce yourself?
+    - what's the name I should use?
+    - how should I address you?
+    - what do I call you?
+    - who am I talking to?
+    - identify yourself
+    - please tell me your name
+    - what is your name?
+    - I'm curious about your name
+    - show me your name
+    - let me know your name
+    - your name, please
+    - can I ask your name?
+    - would you share your name?
+    - who do I have the pleasure of speaking with?
+
+- intent: ask_help
+  examples: |
+    - can you help me?
+    - I need assistance
+    - help
+    - how can you help?
+    - could you assist me?
+    - I need your help
+    - assist me please
+    - I could use some help
+    - can you give me a hand?
+    - help me out
+    - I need some guidance
+    - could you guide me?
+    - support me please
+    - aid me in this
+    - I require assistance
+    - please help me
+    - I'm looking for help
+    - I need support
+    - can you support me?
+    - I need a favor
+
+- intent: ask_capabilities
+  examples: |
+    - what can you do?
+    - what are your skills?
+    - what kind of tasks can you handle?
+    - how can you assist me?
+    - what functions do you have?
+    - tell me your capabilities
+    - what services do you offer?
+    - what can I ask you to do?
+    - which tasks can you perform?
+    - what help can you provide?
+    - in which areas can you assist?
+    - what are you capable of?
+    - how may you assist me?
+    - what things can you do?
+    - what features do you have?
+    - how can you be useful?
+    - which operations can you run?
+    - what competencies do you have?
+    - what tasks are within your scope?
+    - how do you assist users?
+
+- intent: mood_great
+  examples: |
+    - I'm doing great
+    - fantastic
+    - awesome
+    - all good here
+    - feeling awesome
+    - excellent
+    - couldn't be better
+    - feeling fantastic
+    - today is great
+    - I feel wonderful
+    - I am happy
+    - things are going well
+    - I’m in a good mood
+    - really good
+    - on top of the world
+    - feeling energized
+    - I’m excited
+    - all is well
+    - I’m cheerful
+    - I feel amazing
+
+- intent: mood_unhappy
+  examples: |
+    - not so good
+    - feeling down
+    - this sucks
+    - I'm frustrated
+    - I'm sad
+    - feeling miserable
+    - I feel unhappy
+    - things aren't going well
+    - I'm upset
+    - I'm disappointed
+    - down in the dumps
+    - feeling blue
+    - I'm stressed
+    - I feel terrible
+    - I'm overwhelmed
+    - this is annoying
+    - feeling low
+    - I’m anxious
+    - I’m worried
+    - I don’t feel good

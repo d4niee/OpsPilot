@@ -1,0 +1,64 @@
+version: "3.1"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: appriciate the thanks from the user
+  steps:
+  - intent: thanks
+  - action: utter_thanks
+
+- rule: Say 'I am a bot' anytime the user challenges
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+- rule: Greet user
+  steps:
+    - intent: greet
+    - action: utter_greet
+
+- rule: Mood great
+  steps:
+    - intent: mood_great
+    - action: utter_mood_great
+
+- rule: Mood unhappy
+  steps:
+    - intent: mood_unhappy
+    - action: utter_mood_unhappy
+
+- rule: Ask name
+  steps:
+    - intent: ask_name
+    - action: utter_ask_name
+
+- rule: Ask help
+  steps:
+    - intent: ask_help
+    - action: utter_ask_help
+
+- rule: Ask capabilities
+  steps:
+    - intent: ask_capabilities
+    - action: utter_ask_capabilities
+
+
+- rule: Respond to Docker questions
+  steps:
+    - intent: ask_docker
+    - action: utter_ask_docker
+
+- rule: Respond to Kubernetes questions
+  steps:
+    - intent: ask_kubernetes
+    - action: utter_ask_kubernetes
+
+- rule: Respond to CI/CD pipeline questions
+  steps:
+    - intent: ask_pipelines
+    - action: utter_ask_pipelines

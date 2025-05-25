@@ -1,0 +1,59 @@
+react:
+  basic:
+    template: docker/react/simple.j2
+    defaults:
+      image_version: latest
+      package_manager: npm
+      port: "3000"
+    available:
+      package_manager:
+        - npm
+        - yarn
+        - pnpm
+  multi-stage:
+    template: docker/react/multi_stage.j2
+    defaults:
+      image_version: latest
+      package_manager: npm
+      port: "3000"
+    available:
+      package_manager:
+        - npm
+        - yarn
+        - pnpm
+springboot:
+  basic:
+    template: docker/springboot/simple.j2
+    defaults:
+      image_version: 17-jdk-slim
+      build_tool: maven
+      jar_dest: app.jar
+      port: "8080"
+    available:
+      build_tool:
+        - maven
+        - gradle
+        - gradle_kotlin
+  multi-stage:
+    template: docker/springboot/multi_stage.j2
+    defaults:
+      image_version: 17-slim
+      build_tool: maven
+      jar_dest: app.jar
+      port: "8080"
+    available:
+      build_tool:
+        - maven
+        - gradle
+        - gradle_kotlin
+nodejs:
+  basic:
+    template: docker/nodejs/simple.j2
+    defaults:
+      image_version: 18-alpine
+      port: "8080"
+  multi-stage:
+    template: docker/nodejs/multi_stage.j2
+    defaults:
+      image_version: 18-alpine
+      port: "8080"

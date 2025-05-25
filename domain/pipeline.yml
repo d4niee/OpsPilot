@@ -1,0 +1,180 @@
+version: "3.1"
+
+entities:
+  - platform
+  - pipeline_name
+  - registry_url
+  - registry_repository_url
+  - deployment_name
+  - helm_path
+  - kubeconfig_path
+  - kube_context
+  - use_helm
+  - manifests_path
+  - namespace
+
+forms:
+  cicd_form:
+    required_slots:
+      - platform
+      - pipeline_name
+      - registry_url
+      - registry_repository_url
+      - deployment_name
+      - helm_path
+      - kubeconfig_path
+      - kube_context
+      - use_helm
+      - manifests_path
+      - namespace
+
+slots:
+  platform:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: platform
+
+  pipeline_name:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: pipeline_name
+
+  registry_url:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: registry_url
+
+  registry_repository_url:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: registry_repository_url
+
+  deployment_name:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: deployment_name
+
+  helm_path:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: helm_path
+
+  kubeconfig_path:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: kubeconfig_path
+
+  kube_context:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: kube_context
+
+  use_helm:
+    type: bool
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: use_helm
+
+  manifests_path:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: manifests_path
+
+  namespace:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: namespace
+
+responses:
+  utter_ask_platform:
+    - text: "Okay nice! Let's create you a Pipeline Configuration. First, Which platform are you using? (Github, Gitlab)"
+      buttons:
+        - title: "Github"
+          payload: "Github"
+        - title: "Gitlab"
+          payload: "Gitlab"
+
+  utter_ask_pipeline_name:
+    - text: "What should the pipeline be named?"
+
+  utter_ask_registry_url:
+    - text: "What is the registry URL?"
+
+  utter_ask_registry_repository_url:
+    - text: "What is the full repository URL?"
+
+  utter_ask_deployment_name:
+    - text: "What should the deployment be called?"
+
+  utter_ask_helm_path:
+    - text: "Where is the Helm chart located (path)?"
+      buttons:
+        - title: "./helm"
+          payload: "./helm"
+
+  utter_ask_kubeconfig_path:
+    - text: "Path to the kubeconfig file? (within the project)"
+      buttons:
+        - title: "./kube"
+          payload: "./kube"
+
+  utter_ask_kube_context:
+    - text: "Which Kubernetes context should be used?"
+      buttons:
+        - title: "default"
+          payload: "default"
+
+  utter_ask_use_helm:
+    - text: "Do you want to use Helm for deployment (yes/no)?"
+      buttons:
+        - title: "yes"
+          payload: "yes"
+        - title: "no"
+          payload: "no"
+
+  utter_ask_manifests_path:
+    - text: "Path to the Kubernetes manifests?"
+      buttons:
+        - title: "./deployment"
+          payload: "./deployment"
+
+  utter_ask_namespace:
+    - text: "In which namespace should it be deployed?"
+      buttons:
+        - title: "default"
+          payload: "default"
+
+  utter_cicd_ready:
+    - text: "Your CI/CD manifest is ready!"

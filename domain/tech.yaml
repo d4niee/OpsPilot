@@ -1,0 +1,19 @@
+version: "3.1"
+
+intents:
+  - ask_docker
+  - ask_kubernetes
+  - ask_pipelines
+
+responses:
+  utter_ask_docker:
+    - text: "Docker is an open platform that enables developers to build, ship, and run applications in lightweight, portable containers."
+    - text: "With Docker you can package your app and its dependencies into a container image, making it easy to deploy and scale anywhere."
+
+  utter_ask_kubernetes:
+    - text: "Kubernetes is an open-source system for automating the deployment, scaling and management of containerized applications."
+    - text: "It groups containers into logical units for easy management and discovery, handling load-balancing, rolling updates and self-healing."
+
+  utter_ask_pipelines:
+    - text: "In DevOps, a pipeline (CI/CD pipeline) is an automated workflow that builds, tests and deploys your code whenever you commit changes."
+    - text: "Pipelines help you deliver software faster and more reliably by automating validation, packaging and deployment steps."

@@ -1,0 +1,79 @@
+version: "3.1"
+
+intents:
+  # basic interaction
+  - greet
+  - goodbye
+  - bot_challenge
+  - thanks
+  - mood_great
+  - mood_unhappy
+  - ask_name
+  - ask_help
+  - ask_capabilities
+  # docker
+  - generate_dockerfile
+  # k8s
+  - generate_kubernetes_deployment
+  # pipeline
+  - generate_pipeline_manifest
+
+actions:
+  - action_generate_dockerfile
+  - validate_dockerfile_form
+  - validate_kubernetes_form
+  - action_generate_kubernetes_deployment
+  - action_generate_cicd
+
+responses:
+  utter_greet:
+    - text: "Hey! How can I help you? 😊"
+      buttons:
+        - title: "What can you do?"
+          payload: "What can you do?"
+
+  utter_thanks:
+    - text: "No problem! I'm here to help you! 😄"
+
+  utter_goodbye:
+    - text: "Bye, see you next time 👋"
+
+  utter_iamabot:
+    - text: >
+        Hello 😀, I'm a bot designed to help you deploy and containerize your application with common technologies.
+        I assist DevOps and Cloud Engineers with Dockerfiles, Kubernetes deployments, and CI/CD pipeline manifests.
+        I support technologies like Spring Boot, React, and Node.js, and platforms like GitLab and GitHub.
+
+  utter_mood_great:
+    - text: "That's great to hear! 😄 Let me know if I can help with anything."
+      buttons:
+      - title: "what kind of tasks can you handle?"
+        payload: "what kind of tasks can you handle?"
+
+  utter_mood_unhappy:
+    - text: "Oh no, I'm sorry to hear that. Maybe working on a cool project can cheer you up? 😊"
+
+  utter_ask_name:
+    - text: "You can call me DevBot, your assistant for deployments and automation. 🤖"
+
+  utter_ask_help:
+    - text: "I can help you generate Dockerfiles, Kubernetes manifests and CI/CD pipelines. Just tell me what you need!"
+
+  utter_ask_capabilities:
+    - text: |
+        I'm here to assist DevOps and Cloud Engineers with:
+        - 📦 Dockerfile creation
+        - ☸️ Kubernetes Deployment generation
+        - 🔄 CI/CD Pipeline templates (GitLab/GitHub)
+        Just ask me in natural language!
+      buttons:
+        - title: "I need a Dockerfile"
+          payload: "I need a Dockerfile"
+        - title: "I need a Kubernetes Deployment"
+          payload: "I need a Kubernetes Deployment"
+        - title: "I need a Pipeline Configuration"
+          payload: "I need a Pipeline Configuration"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

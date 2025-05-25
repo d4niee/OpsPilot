@@ -1,0 +1,25 @@
+version: "3.1"
+
+nlu:
+- intent: generate_kubernetes_deployment
+  examples: |
+    - I need a Kubernetes deployment
+    - generate a Kubernetes deployment
+    - can you write a Kubernetes deployment?
+    - create a deployment for Kubernetes
+    - write a Kubernetes deployment for my app
+    - help me create a Kubernetes deployment
+    - show me an example Kubernetes deployment
+    - how do I write a Kubernetes deployment?
+    - make a deployment template for Kubernetes
+    - create deployment YAML for Kubernetes
+    - build a Kubernetes deployment file
+    - generate deployment config for my project
+    - create a simple Kubernetes deployment
+    - write deployment YAML for my application
+    - I want to deploy my app using Kubernetes
+    - make me a Kubernetes deployment
+    - Kubernetes deployment example please
+    - how to create a Kubernetes deployment?
+    - deployment YAML for Kubernetes needed
+    - generate a basic Kubernetes deployment

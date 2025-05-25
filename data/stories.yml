@@ -1,0 +1,32 @@
+version: "3.1"
+
+stories:
+
+- story: happy path
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+- story: test dockerfile form
+  steps:
+    - intent: generate_dockerfile
+    - action: dockerfile_form
+    - active_loop: dockerfile_form
+    - active_loop: null
+    - action: action_generate_dockerfile
+
+- story: test kubernetes form
+  steps:
+    - intent: generate_kubernetes_deployment
+    - action: kubernetes_form
+    - active_loop: kubernetes_form
+    - active_loop: null
+    - action: action_generate_kubernetes_deployment
+
+- story: test pipeline form
+  steps:
+    - intent: generate_pipeline_manifest
+    - action: cicd_form
+    - active_loop: cicd_form
+    - active_loop: null
+    - action: action_generate_cicd

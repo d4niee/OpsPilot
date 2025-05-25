@@ -1,0 +1,118 @@
+stages:
+  - build
+  - test
+  - security_scans
+  - deployment
+
+"🔨 Build":
+  stage: build
+  before_script:
+    - docker login {{ registry_url }} -u $REGISTRY_USER -p $REGISTRY_PASS
+  script:
+    - set -e
+    - |
+      if [[ "$CI_COMMIT_REF_NAME" == "main" ]]; then
+        echo "detected changes on main, pushing test..."
+        docker build -t {{ registry_repository_url }}:$CI_COMMIT_SHORT_SHA --target app .
+        docker image push {{ registry_repository_url }}:$CI_COMMIT_SHORT_SHA
+      elif [[ "$CI_COMMIT_TAG" =~ ^release-.* ]]; then
+        echo "new release tag <$CI_COMMIT_TAG>, pushing release..."
+        docker build -t {{ registry_repository_url }}/prod:$CI_COMMIT_SHORT_SHA --target app .
+        docker image push {{ registry_repository_url }}/prod:$CI_COMMIT_SHORT_SHA
+      else
+        echo 'not triggered on main/release, image not pushed'
+        docker build -t {{ registry_repository_url }}:$CI_COMMIT_SHORT_SHA --target app .
+      fi
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' || $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+"🧪 Test":
+  stage: test
+  variables:
+    TAG: test
+  before_script:
+    - docker login {{ registry_url }} -u $REGISTRY_USER -p $REGISTRY_PASS
+  script:
+    - set -e
+    - docker build -t {{ registry_repository_url }}:$CI_COMMIT_SHORT_SHA --target test .
+    - docker run --rm {{ registry_repository_url }}:$CI_COMMIT_SHORT_SHA
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' || $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+"🔒 OWASP Dependency Check":
+  stage: security_scans
+  image:
+    name: owasp/dependency-check
+    entrypoint: [""]
+  cache:
+    key: "OWASP_CACHE"
+    paths:
+      - ./.dependency-check-data/data
+    policy: pull-push
+  before_script:
+    - export DEP_CHECK_PATH=/usr/share/dependency-check/bin/dependency-check.sh
+    - export DATA_DIRECTORY=.dependency-check-data/data
+  script:
+    - >
+      $DEP_CHECK_PATH
+      --data $DATA_DIRECTORY
+      --project $PROJECT_NAME
+      --out .
+      --scan=yarn.lock
+      --failOnCVSS 7
+  artifacts:
+    when: always
+    expose_as: 'OWASP Dependency Check Report'
+    paths:
+      - 'dependency-check-report.html'
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_REF_NAME == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+"🔒 Sonarqube Quality Check":
+  stage: security_scans
+  image:
+    name: sonarsource/sonar-scanner-cli
+    entrypoint: [""]
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - >
+      sonar-scanner
+      -Dsonar.host.url=$SONAR_HOST_URL
+      -Dsonar.login=$SONAR_TOKEN
+      -Dsonar.projectKey=$SONAR_PROJECT_KEY
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_REF_NAME == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+"🚀 Deployment":
+  stage: deployment
+  image: dtzar/helm-kubectl
+  script:
+    - chmod 600 {{ kubeconfig_path }}
+    - kubectl config use-context {{ kube_context }}
+    {% if use_helm | default(false) %}
+    - |
+      if [[ "$CI_COMMIT_REF_NAME" == "main" ]]; then
+        echo "detected commit on <$CI_COMMIT_REF_NAME>"
+        helm upgrade --install {{ deployment_name }} {{ helm_path }} -f {{ helm_path }}/values.yaml --set-string {{ deployment_name }}.image.tag=${CI_COMMIT_SHORT_SHA}
+      elif [[ "$CI_COMMIT_TAG" =~ ^release-.* ]]; then
+        echo "detected new release tag <$CI_COMMIT_TAG>"
+        helm upgrade --install {{ deployment_name }}-prod {{ helm_path }} -f {{ helm_path }}/values.prod.yaml --set-string {{ deployment_name }}.image.tag=${CI_COMMIT_SHORT_SHA}
+      fi
+    {% else %}
+    - |
+      if [[ "$CI_COMMIT_REF_NAME" == "main" ]]; then
+        echo "detected commit on <$CI_COMMIT_REF_NAME>"
+        kubectl apply -f {{ manifests_path }}/ -n {{ namespace }}
+      elif [[ "$CI_COMMIT_TAG" =~ ^release-.* ]]; then
+        echo "detected new release tag <$CI_COMMIT_TAG>"
+        kubectl apply -f {{ manifests_path }}/prod/ -n {{ namespace }}
+      fi
+    {% endif %}
+  only:
+    - main
+    - tags

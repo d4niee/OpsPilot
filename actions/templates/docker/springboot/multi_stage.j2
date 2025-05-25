@@ -1,0 +1,33 @@
+{% set jar_dest = 'app.jar' %}
+FROM openjdk:{{ image_version }} AS build
+WORKDIR /app
+{% if build_tool == 'maven' %}
+COPY pom.xml .
+COPY .mvn/ .mvn/
+COPY mvnw .
+{% elif build_tool in ['gradle', 'gradle_kotlin'] %}
+COPY gradlew .
+COPY gradle/ gradle/
+{% endif %}
+{% if build_tool == 'gradle' %}
+COPY build.gradle .
+COPY settings.gradle .
+{% elif build_tool == 'gradle_kotlin' %}
+COPY build.gradle.kts .
+COPY settings.gradle.kts .
+{% endif %}
+COPY src/ src/
+{% if build_tool == 'maven' %}
+RUN chmod +x mvnw && ./mvnw clean package -DskipTests
+{% else %}
+RUN chmod +x gradlew && ./gradlew build -x test --no-daemon
+{% endif %}
+FROM openjdk:{{ image_version }}
+WORKDIR /app
+{% if build_tool == 'maven' %}
+COPY --from=build /app/target/*.jar {{ jar_dest }}
+{% else %}
+COPY --from=build /app/build/libs/*.jar {{ jar_dest }}
+{% endif %}
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "{{ jar_dest }}"]

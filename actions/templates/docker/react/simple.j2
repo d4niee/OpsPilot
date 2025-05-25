@@ -1,0 +1,13 @@
+FROM node:{{ image_version }}
+WORKDIR /{{ app_name }}
+{% if package_manager == "npm" %}
+COPY package*.json ./
+{% elif package_manager == "yarn" %}
+COPY package.json yarn.lock ./
+{% elif package_manager == "pnpm" %}
+COPY package.json pnpm-lock.yaml ./
+{% endif %}
+RUN {{ package_manager }} install
+COPY . .
+EXPOSE {{ port }}
+CMD ["{{ package_manager }}", "start"]

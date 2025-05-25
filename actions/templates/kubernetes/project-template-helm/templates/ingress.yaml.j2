@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ kubernetes_app_name }}-ingress
+  annotations:
+    {% if tls_enabled %}
+    cert-manager.io/cluster-issuer: {{ tls_issuer | default("letsencrypt-prod") }}
+    spec.ingressClassName: {{ ingress_class | default("traefik") }}
+    {% endif %}
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  {% if tls_enabled %}
+  tls:
+    - hosts:
+        - {{ domain }}
+      secretName: {{ tls_secret_name | default(kubernetes_app_name + "-tls") }}
+  {% endif %}
+  rules:
+    - host: {{ domain }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ kubernetes_app_name | default(kubernetes_app_name) }}
+                port:
+                  number: {{ container_port | default(80) }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ kubernetes_app_name }}-cert
+spec:
+  secretName: {{ tls_secret_name }}
+  issuerRef:
+    name: {{ tls_issuer }}
+    kind: ClusterIssuer
+  commonName: {{ domain | default('demo') }}
+  dnsNames:
+    - {{ domain | default('demo') }}

@@ -1,0 +1,11 @@
+.rasa
+.env
+.keras
+.config
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.DS_Store

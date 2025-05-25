@@ -1,0 +1,46 @@
+app:
+  name: {{ kubernetes_app_name }}
+  image: {{ image }}
+  containerPort: {{ container_port }}
+  replicas: {{ replicas | default(1) }}
+
+env:
+{% for key, value in env_vars.items() %}
+  {{ key }}: "{{ value }}"
+{% endfor %}
+
+secret:
+  enabled: {{ secret_enabled | default(false) }}
+  name: {{ secret_name | default(kubernetes_app_name + "-secret") }}
+  data:
+{% for key, value in secrets.items() %}
+    {{ key }}: "{{ value }}"
+{% endfor %}
+
+ingress:
+  enabled: {{ ingress_enabled | default(false) }}
+  domain: {{ ingress_domain }}
+  tls:
+    enabled: {{ tls_enabled | default(false) }}
+    secretName: {{ tls_secret_name | default(kubernetes_app_name + "-tls") }}
+    issuer: {{ tls_issuer | default("letsencrypt-prod") }}
+  paths:
+{% for path in ingress_paths %}
+    - path: {{ path.path }}
+      pathType: {{ path.path_type | default("Prefix") }}
+      servicePort: {{ path.service_port }}
+{% endfor %}
+
+{% if kubernetes_no_root_enabled | default(false) %}
+securityContext:
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+{% endif %}
+
+resources:
+  limits:
+    cpu: {{ kubernetes_cpu_max | default('500m') }}
+    memory: {{ memory_limit | default('512Mi') }}
+  requests:
+    cpu: {{ kubernetes_mem_req | default('250m') }}
+    memory: {{ kubernetes_mem_max | default('256Mi') }}

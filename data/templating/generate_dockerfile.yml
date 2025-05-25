@@ -1,0 +1,25 @@
+version: "3.1"
+
+nlu:
+- intent: generate_dockerfile
+  examples: |
+    - I need a Dockerfile
+    - generate a Dockerfile
+    - can you write a Dockerfile?
+    - make me a Dockerfile
+    - write a Dockerfile for my app
+    - build a Dockerfile for a simple project
+    - show me a basic Dockerfile
+    - help me create a Dockerfile
+    - I want a Dockerfile
+    - Dockerfile example please
+    - how do I write a Dockerfile?
+    - create a simple Dockerfile
+    - write Dockerfile for my backend
+    - generate Dockerfile for an application
+    - Dockerize my app
+    - create Dockerfile for deployment
+    - make a Dockerfile template
+    - get me a Dockerfile
+    - simple Dockerfile needed
+    - create Dockerfile for my project

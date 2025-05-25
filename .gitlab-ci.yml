@@ -1,0 +1,46 @@
+stages:
+  - build
+  - test
+  - train
+
+variables:
+  POETRY_VIRTUALENVS_CREATE: "false"
+
+Build_Frontend:
+  stage: build
+  image: docker
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - echo "build"
+    - |
+      set -e
+      cd frontend
+      docker build -t rasa-chatbot-frontend .
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event"'
+
+train_model:
+  stage: train
+  image: python:3.10
+  before_script:
+    - apt-get update && apt-get install -y git
+    - pip install poetry
+    - poetry install --no-root
+  script:
+    - chmod +x scripts/train_model.sh
+    - ./scripts/train_model.sh
+  artifacts:
+    paths:
+      - models/
+    expire_in: 1 week
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+Test:
+  stage: test
+  image: docker:latest
+  script:
+    - echo "test"

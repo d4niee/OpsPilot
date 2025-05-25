@@ -1,0 +1,36 @@
+FROM node:{{ image_version }} AS base
+WORKDIR /{{ app_name }}
+{% if package_manager == "npm" %}
+COPY package*.json ./
+{% elif package_manager == "yarn" %}
+COPY package.json yarn.lock ./
+{% elif package_manager == "pnpm" %}
+COPY package.json pnpm-lock.yaml ./
+{% endif %}
+RUN {{ package_manager }} install
+FROM base AS build
+COPY . .
+{% if package_manager == "npm" %}
+RUN npm run build
+{% elif package_manager == "yarn" %}
+RUN yarn build
+{% elif package_manager == "pnpm" %}
+RUN pnpm build
+{% endif %}
+
+FROM base AS test
+COPY . .
+{% if package_manager == "npm" %}
+RUN npm test
+{% elif package_manager == "yarn" %}
+RUN yarn test
+{% elif package_manager == "pnpm" %}
+RUN pnpm test
+{% endif %}
+
+FROM nginx:stable-alpine AS app
+WORKDIR /usr/share/nginx/html
+RUN rm -rf ./*
+COPY --from=build /{{ app_name }}/build .
+EXPOSE {{ port }}
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

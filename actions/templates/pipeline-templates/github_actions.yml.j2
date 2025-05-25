@@ -1,0 +1,134 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'release-*'
+  pull_request:
+    branches:
+      - main
+
+env:
+  REGISTRY_URL: {{ registry_url }}
+  REGISTRY_USER: secrets.REGISTRY_USER
+  REGISTRY_PASS: secrets.REGISTRY_PASS
+  REGISTRY_REPOSITORY_URL: {{ registry_repository_url }}
+  PROJECT_NAME: {{ project_name | default('') }}
+  KUBECONFIG_PATH: {{ kubeconfig_path }}
+  KUBE_CONTEXT: {{ kube_context }}
+  MANIFESTS_PATH: {{ manifests_path }}
+  NAMESPACE: {{ namespace }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to registry
+        run: docker login env.REGISTRY_URL -u env.REGISTRY_USER -p env.REGISTRY_PASS
+      - name: Build and push image
+        run: |
+          set -e
+          if [[ github.ref_name == "main" ]]; then
+            echo "detected changes on main, pushing test..."
+            docker build -t env.REGISTRY_REPOSITORY_URL:latest --target app .
+            docker push env.REGISTRY_REPOSITORY_URL:latest
+          elif [[ github.ref_name =~ ^release-.* ]]; then
+            echo "new release tag <github.ref_name>, pushing release..."
+            docker build -t env.REGISTRY_REPOSITORY_URL/prod:latest --target app .
+            docker push env.REGISTRY_REPOSITORY_URL/prod:latest
+          else
+            echo 'not triggered on main/release, not pushing'
+            docker build -t env.REGISTRY_REPOSITORY_URL:latest --target app .
+          fi
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    env:
+      TAG: test
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to registry
+        run: docker login env.REGISTRY_URL -u env.REGISTRY_USER -p env.REGISTRY_PASS
+      - name: Build test image
+        run: docker build -t env.REGISTRY_REPOSITORY_URL:latest --target test .
+      - name: Run tests
+        run: docker run --rm env.REGISTRY_REPOSITORY_URL:latest
+
+  security_owasp:
+    needs: [test]
+    runs-on: ubuntu-latest
+    container:
+      image: owasp/dependency-check
+      entrypoint: [""]
+    if: (github.event_name == 'push' && github.ref_name == 'main') || github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run OWASP Dependency Check
+        run: |
+          export DEP_CHECK_PATH=/usr/share/dependency-check/bin/dependency-check.sh
+          export DATA_DIRECTORY=.dependency-check-data/data
+          $DEP_CHECK_PATH \
+            --data $DATA_DIRECTORY \
+            --project {{ project_name }} \
+            --out . \
+            --scan=yarn.lock \
+            --failOnCVSS 7
+      - name: Upload OWASP report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: OWASP Dependency Check Report
+          path: dependency-check-report.html
+
+  security_sonar:
+    needs: [test]
+    runs-on: ubuntu-latest
+    container:
+      image: sonarsource/sonar-scanner-cli
+      entrypoint: [""]
+    if: (github.event_name == 'push' && github.ref_name == 'main') || github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run SonarQube
+        run: |
+          sonar-scanner \
+            -Dsonar.host.url=secrets.SONAR_HOST_URL \
+            -Dsonar.login=secrets.SONAR_TOKEN \
+            -Dsonar.projectKey=secrets.SONAR_PROJECT_KEY
+
+  deployment:
+    needs: [test]
+    runs-on: ubuntu-latest
+    container:
+      image: dtzar/helm-kubectl
+    if: github.ref_name == 'main' || startsWith(github.ref_name, 'release-')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          cp env.KUBECONFIG_PATH ~/.kube/config
+          kubectl config use-context env.KUBE_CONTEXT
+      {% if use_helm %}
+      - name: Deploy with Helm
+        run: |
+          if [[ github.ref_name == "main" ]]; then
+            helm upgrade --install {{ deployment_name }} {{ helm_path }} -f {{ helm_path }}/values.yaml --set-string {{ deployment_name }}.image.tag=latest
+          elif [[ github.ref_name =~ ^release-.* ]]; then
+            helm upgrade --install {{ deployment_name }}-prod {{ helm_path }} -f {{ helm_path }}/values.prod.yaml --set-string {{ deployment_name }}.image.tag=latest
+          fi
+      {% else %}
+      - name: Deploy with kubectl
+        run: |
+          if [[ github.ref_name == "main" ]]; then
+            kubectl apply -f {{ manifests_path }}/ -n {{ namespace }}
+          elif [[ github.ref_name =~ ^release-.* ]]; then
+            kubectl apply -f {{ manifests_path }}/prod/ -n {{ namespace }}
+          fi
+      {% endif %}

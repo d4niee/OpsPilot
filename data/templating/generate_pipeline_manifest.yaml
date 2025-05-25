@@ -1,0 +1,25 @@
+version: "3.1"
+
+nlu:
+- intent: generate_pipeline_manifest
+  examples: |
+    - I need a pipeline
+    - can you create a pipeline manifest?
+    - generate a CI pipeline
+    - create a CI/CD pipeline configuration
+    - help me build a pipeline
+    - write a pipeline for my app
+    - pipeline config please
+    - I want a pipeline manifest
+    - build me a GitHub Actions workflow
+    - create a GitLab CI pipeline
+    - how do I create a pipeline manifest?
+    - show me an example pipeline file
+    - I need a .gitlab-ci.yml
+    - I want to create a .github/workflows file
+    - generate a pipeline file for my project
+    - give me a pipeline example
+    - write CI/CD pipeline YAML
+    - make a pipeline for deployment
+    - help me define a pipeline for my app
+    - pipeline manifest template please

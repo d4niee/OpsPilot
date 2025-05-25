@@ -1,0 +1,70 @@
+version: "3.1"
+nlu:
+- intent: ask_docker
+  examples: |
+    - what is Docker?
+    - can you explain Docker?
+    - what is Docker used for?
+    - how does Docker work?
+    - what can I do with Docker?
+    - what are containers?
+    - what is a container?
+    - why use Docker?
+    - what are the benefits of Docker?
+    - what problems does Docker solve?
+    - describe Docker in simple terms
+    - define Docker
+    - give me an overview of Docker
+    - what is a Docker image?
+    - what does Docker do?
+    - how do I start using Docker?
+    - what's the purpose of Docker?
+    - tell me about Docker
+    - how is Docker different from virtual machines?
+    - what are typical use cases for Docker?
+
+- intent: ask_kubernetes
+  examples: |
+    - what is Kubernetes?
+    - can you explain Kubernetes?
+    - what is Kubernetes used for?
+    - how does Kubernetes work?
+    - what can I do with Kubernetes?
+    - what is container orchestration?
+    - why use Kubernetes?
+    - what are the benefits of Kubernetes?
+    - what problems does Kubernetes solve?
+    - define Kubernetes
+    - describe Kubernetes in simple terms
+    - what's the purpose of Kubernetes?
+    - what is a Kubernetes cluster?
+    - what are pods in Kubernetes?
+    - tell me about Kubernetes
+    - how do I start with Kubernetes?
+    - what is a deployment in Kubernetes?
+    - how is Kubernetes different from Docker?
+    - what components does Kubernetes have?
+    - what are typical use cases for Kubernetes?
+
+- intent: ask_pipelines
+  examples: |
+    - what is a pipeline?
+    - can you explain what a pipeline is?
+    - what is a CI/CD pipeline?
+    - what are pipelines used for?
+    - what can I do with pipelines?
+    - how do pipelines work?
+    - why use pipelines?
+    - tell me about pipelines
+    - define a pipeline in DevOps
+    - what problems do pipelines solve?
+    - describe pipelines in simple terms
+    - what are the benefits of using pipelines?
+    - what's the purpose of pipelines?
+    - how do I create a pipeline?
+    - what is pipeline automation?
+    - what is a pipeline manifest?
+    - give me an overview of pipelines
+    - what is a continuous integration pipeline?
+    - what is a continuous deployment pipeline?
+    - what are typical use cases for pipelines?

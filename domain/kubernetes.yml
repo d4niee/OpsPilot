@@ -1,0 +1,435 @@
+version: "3.1"
+
+entities:
+  - kubernetes_app_name
+  - kubernetes_image
+  - kubernetes_replicas
+  - kubernetes_container_port
+  - kubernetes_env_vars
+  - kubernetes_secret_name
+  - kubernetes_domain
+  - kubernetes_tls_enabled
+  - kubernetes_tls_secret_name
+  - kubernetes_tls_issuer
+  - kubernetes_secret_enabled
+  - kubernetes_secrets
+  - kubernetes_ingress_enabled
+  - kubernetes_ingress_paths
+  - ingress_class
+  # limits / request
+  - kubernetes_cpu_req
+  - kubernetes_cpu_max
+  - kubernetes_mem_req
+  - kubernetes_mem_max
+  # no root
+  - kubernetes_no_root_enabled
+  # private registry
+  - use_private_registry
+  - docker_registry
+  - docker_username
+  - docker_password
+  - docker_email
+  - image_pull_secret_name
+
+forms:
+  kubernetes_form:
+    required_slots:
+      - kubernetes_app_name
+      - kubernetes_image
+      - kubernetes_replicas
+      - kubernetes_container_port
+      - kubernetes_env_vars
+      - kubernetes_secret_name
+      - kubernetes_domain
+      - kubernetes_tls_enabled
+      - kubernetes_tls_secret_name
+      - kubernetes_tls_issuer
+      - kubernetes_secret_enabled
+      - kubernetes_secrets
+      - kubernetes_ingress_enabled
+      - kubernetes_ingress_paths
+      # limits / request
+      - kubernetes_cpu_req
+      - kubernetes_cpu_max
+      - kubernetes_mem_req
+      - kubernetes_mem_max
+      # no root
+      - kubernetes_no_root_enabled
+      - ingress_class
+      # private registry
+      - use_private_registry
+      - docker_registry
+      - docker_username
+      - docker_password
+      - docker_email
+      - image_pull_secret_name
+
+slots:
+  kubernetes_app_name:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_app_name
+
+  kubernetes_image:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_image
+
+  kubernetes_replicas:
+    type: float
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_replicas
+
+  kubernetes_container_port:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_container_port
+
+  kubernetes_env_vars:
+    type: any
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_env_vars
+
+  kubernetes_secret_name:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_secret_name
+
+  kubernetes_domain:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_domain
+
+  kubernetes_tls_enabled:
+    type: bool
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_tls_enabled
+
+  kubernetes_tls_secret_name:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_tls_secret_name
+
+  kubernetes_tls_issuer:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_tls_issuer
+
+  kubernetes_secret_enabled:
+    type: bool
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_secret_enabled
+
+  kubernetes_secrets:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_secrets
+
+
+  kubernetes_ingress_enabled:
+    type: bool
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_ingress_enabled
+
+  kubernetes_ingress_paths:
+    type: any
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_ingress_paths
+
+  kubernetes_cpu_req:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_cpu_req
+  kubernetes_cpu_max:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_cpu_max
+  kubernetes_mem_req:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_mem_req
+  kubernetes_mem_max:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_mem_max
+  kubernetes_no_root_enabled:
+    type: bool
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: kubernetes_no_root_enabled
+          
+  ingress_class:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: kubernetes_form
+            requested_slot: ingress_class
+  use_private_registry:
+    type: bool
+    mappings: [{ type: from_text, conditions: [{ active_loop: kubernetes_form, requested_slot: use_private_registry }] }]
+  docker_registry:
+    type: text
+    mappings: [{ type: from_text, conditions: [{ active_loop: kubernetes_form, requested_slot: docker_registry }] }]
+  docker_username:
+    type: text
+    mappings: [{ type: from_text, conditions: [{ active_loop: kubernetes_form, requested_slot: docker_username }] }]
+  docker_password:
+    type: text
+    mappings: [{ type: from_text, conditions: [{ active_loop: kubernetes_form, requested_slot: docker_password }] }]
+  docker_email:
+    type: text
+    mappings: [{ type: from_text, conditions: [{ active_loop: kubernetes_form, requested_slot: docker_email }] }]
+  image_pull_secret_name:
+    type: text
+    mappings: [{ type: from_text, conditions: [{ active_loop: kubernetes_form, requested_slot: image_pull_secret_name }] }]
+
+responses:
+  utter_ask_kubernetes_form_kubernetes_app_name:
+    - text: "Okay Let's create a Kubernetes Deployment for Your Application ☸️! What should your deployment be called?"
+
+  utter_ask_kubernetes_form_kubernetes_image:
+    - text: "Which container image should be used? (paste URL to your Container Registry)"
+
+  utter_ask_kubernetes_form_kubernetes_replicas:
+    - text: "How many replicas should be deployed?"
+      buttons:
+        - title: "1"
+          payload: "1"
+        - title: "2"
+          payload: "2"
+        - title: "3"
+          payload: "3"
+  utter_ask_kubernetes_form_kubernetes_container_port:
+    - text: "Which port should the container expose?"
+      buttons:
+        - title: "80 (HTTP)"
+          payload: "80"
+        - title: "443 (HTTPS)"
+          payload: "443"
+        - title: "3000 (Dev/Node.js)"
+          payload: "3000"
+
+  utter_ask_kubernetes_form_kubernetes_env_vars:
+    - text: "Please provide environment variables as 'key=value' pairs seperated by ','. for example key=value,test=demo,... (or skip this action)."
+      buttons:
+        - title: "skip this step"
+          payload: "skip"
+        - title: "VITE_APP_ENV"
+          payload: "VITE_APP_ENV"
+        - title: "ENV"
+          payload: "ENV"
+
+  utter_ask_kubernetes_form_kubernetes_secret_enabled:
+    - text: "Should a App secret be generated? (yes/no)"
+      buttons:
+        - title: "yes"
+          payload: "yes"
+        - title: "no"
+          payload: "no"
+
+  utter_ask_kubernetes_form_kubernetes_secret_name:
+    - text: "What should the application secret be named? (used for env variables)"
+
+  utter_ask_kubernetes_form_kubernetes_domain:
+    - text: "Under which domain should the app be reachable? (for example demo.myapp.com)"
+      buttons:
+        - title: "localhost (for testing)"
+          payload: "127.0.0.1"
+
+  utter_ask_kubernetes_form_kubernetes_tls_enabled:
+    - text: "Should TLS be enabled? (yes/no)"
+      buttons:
+        - title: "yes"
+          payload: "yes"
+        - title: "no"
+          payload: "no"
+  
+  utter_ask_kubernetes_form_kubernetes_tls_secret_name:
+    - text: "What should be the name of the TLS certificate secret (used for HTTPS)?"
+
+  utter_ask_kubernetes_form_kubernetes_tls_issuer:
+    - text: "Which cert-manager issuer should be used?"
+      buttons:
+        - title: "letsencrypt-prod"
+          payload: "letsencrypt-prod"
+
+  utter_ask_kubernetes_form_kubernetes_secrets:
+    - text: "Please provide the App secret values"
+
+  utter_ask_kubernetes_form_kubernetes_ingress_enabled:
+    - text: "Should Ingress be enabled? (yes/no)"
+      buttons:
+        - title: "yes"
+          payload: "yes"
+        - title: "no"
+          payload: "no"
+
+  utter_ask_kubernetes_form_kubernetes_ingress_paths:
+    - text: "Please provide the ingress pathtype. (Default Prefix, only change if required)"
+      buttons:
+        - title: "Prefix"
+          payload: "Prefix"
+      
+  utter_ask_kubernetes_form_kubernetes_cpu_req:
+    - text: "Please provide the requested CPU resources the deployment can reserve"
+      buttons:
+        - title: "64m"
+          payload: "64m"
+        - title: "256m"
+          payload: "256m"
+        - title: "500m"
+          payload: "500m"
+        - title: "1000m"
+          payload: "1000m"
+
+  utter_ask_kubernetes_form_kubernetes_cpu_max:
+    - text: "Please provide the maximum CPU resources the deployment can reserve"
+      buttons:
+        - title: "64m"
+          payload: "64m"
+        - title: "256m"
+          payload: "256m"
+        - title: "500m"
+          payload: "500m"
+        - title: "1000m"
+          payload: "1000m"
+
+  utter_ask_kubernetes_form_kubernetes_mem_req:
+    - text: "Please provide the requested Memory (RAM) resources the deployment can reserve"
+      buttons:
+        - title: "64Mi"
+          payload: "64Mi"
+        - title: "512Mi"
+          payload: "512Mi"
+        - title: "1024Mi"
+          payload: "1024Mi"
+
+  utter_ask_kubernetes_form_kubernetes_mem_max:
+    - text: "Please provide the maximum Memory (RAM) resources the deployment can reserve"
+      buttons:
+        - title: "64Mi"
+          payload: "64Mi"
+        - title: "512Mi"
+          payload: "512Mi"
+        - title: "1024Mi"
+          payload: "1024Mi"
+
+  utter_ask_kubernetes_form_kubernetes_no_root_enabled:
+    - text: "Should your Deployment run as non-root without privileged actions? (strongly recommended but may break some image functionality)"
+      buttons:
+        - title: "yes"
+          payload: "yes"
+        - title: "no"
+          payload: "no"
+
+  utter_ask_ingress_class:
+    - text: "Which Ingress class should be used (What Ingress-Controller is running in your cluster?)"
+      buttons:
+        - title: "traefik (typically in k3s clusters)"
+          payload: "traefik"
+        - title: "nginx (typically k8s clusters)"
+          payload: "nginx"
+  utter_ask_kubernetes_form_use_private_registry:
+    - text: "Do you want to pull from a private container registry? (yes/no)"
+      buttons:
+        - title: "yes"
+          payload: "yes"
+        - title: "no"
+          payload: "no"
+
+  utter_ask_kubernetes_form_docker_registry:
+    - text: "What is the URL of your Docker Registry?"
+  
+  utter_ask_kubernetes_form_docker_username:
+    - text: "What's your Docker Registry username?"
+
+  utter_ask_kubernetes_form_docker_password:
+    - text: "What's your Docker Registry password?"
+
+  utter_ask_kubernetes_form_docker_email:
+    - text: "What's your Docker Registry email address?"
+
+  utter_ask_kubernetes_form_image_pull_secret_name:
+    - text: "What should the imagePullSecret be called in Kubernetes?"
+
+  utter_kubernetes_ready:
+    - text: "All done! 🎉 Here is your Kubernetes manifest."
+
+  # Error Handling
+  utter_invalid_replicas:
+    - text: "🤔 Sorry, I did not understand that. Please enter a valid replica number (whole numbers)"
+
+  utter_invalid_port:
+    - text: "🤔 Please enter a valid port between 1 and 65535."
+
+  utter_invalid_cpu_req_or_max:
+    - text: "🤔  I'm sorry, I didn't understand that. Please enter the min/max cpu values in the following pattern: <value>m or just use one of the given example buttons"
+  
+  utter_invalid_mem_req_or_max:
+    - text: "🤔 I'm sorry, I didn't understand that. Please enter the min/max memory values in the following pattern: <value>Mi or just use one of the given example buttons"
+
+  utter_invalid_email:
+    - text: "🤔 I'm sorry, please provide a valid email adress"
+  
+  utter_invalid_url:
+    - text: "🤔 I'm sorry, please provide a valid docker registry url with the correct HTTP(S) Pattern"
+  
+  utter_invalid_secret_name:
+    - text: "🤔 I'm sorry, please provide a valid secret name with alphanumeric characters and '-', '_' but without special characters or spaces"

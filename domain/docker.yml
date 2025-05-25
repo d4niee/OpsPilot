@@ -1,0 +1,188 @@
+version: "3.1"
+
+entities:
+  - build_type
+  - language
+  - package_manager
+  - port
+  - app_name
+  # springboot
+  - build_tool
+  - jar_dest
+  # nodejs
+  - entrypoint
+
+forms:
+  dockerfile_form:
+    required_slots: []
+
+slots:
+  build_type:
+    type: categorical
+    values:
+      - basic
+      - multi-stage
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: dockerfile_form
+            requested_slot: build_type
+
+  language:
+    type: categorical
+    values:
+      - react
+      - springboot
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: dockerfile_form
+            requested_slot: language
+
+  image_version:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: dockerfile_form
+            requested_slot: image_version
+
+  app_name:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: dockerfile_form
+            requested_slot: app_name
+
+  package_manager:
+    type: categorical
+    values:
+      - npm
+      - yarn
+      - pnpm
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: dockerfile_form
+            requested_slot: package_manager
+
+  port:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: dockerfile_form
+            requested_slot: port
+
+  build_tool:
+    type: categorical
+    values:
+      - maven
+      - gradle
+      - gradle_kotlin
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: dockerfile_form
+            requested_slot: build_tool
+
+  jar_dest:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: dockerfile_form
+            requested_slot: jar_dest
+
+  entrypoint:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: dockerfile_form
+            requested_slot: entrypoint
+
+responses:
+  # dockerfile_form
+  # template buttons payloads are the templates for the responses
+  utter_ask_build_type:
+    - text: "Great, Let's create a Dockerfile 🐋. Should it be a basic or multi-stage Dockerfile? (If you also want a pipeline you have to select multi-stage)"
+      buttons:
+        - title: "Basic"
+          payload: "basic"
+        - title: "Multi-Stage"
+          payload: "multi-stage"
+  utter_ask_language:
+    - text: "What is the main project type/language? (e.g. react)"
+      buttons:
+        - title: "react"
+          payload: "react"
+        - title: "springboot"
+          payload: "springboot"
+        - title: "nodejs"
+          payload: "springboot"
+  utter_ask_image_version:
+    - text: "What vesion do you want to use for the base image?"
+      buttons:
+        - title: "latest"
+          payload: "latest"
+  utter_ask_package_manager:
+    - text: "Which package manager are you using in your project? (e.g. npm, yarn)"
+      buttons:
+        - title: "npm"
+          payload: "npm"
+        - title: "yarn"
+          payload: "yarn"
+        - title: "pnpm"
+          payload: "pnpm"
+  utter_ask_port:
+    - text: "Which port should the application expose?"
+      buttons:
+        - title: "8080"
+          payload: "8080"
+  utter_ask_app_name:
+    - text: "What is the name of your application? (default demo-app)"
+      buttons:
+        - title: "my-app"
+          payload: "my-app"
+  utter_ask_build_tool:
+    - text: "Which build tool should be used? (maven, gradle oder gradle_kotlin)"
+      buttons:
+        - title: "maven"
+          payload: "maven"
+        - title: "gradle"
+          payload: "gradle"
+        - title: "gradle_kotlin"
+          payload: "gradle_kotlin"
+  utter_ask_jar_dest:
+    - text: "What should the generated JAR be called?  (Standard: `app.jar`)"
+      buttons:
+        - title: "app.jar"
+          payload: "app.jar"
+  utter_ask_entrypoint:
+    - text: "What should be the entrypoint?"
+      buttons:
+        - title: "app.js"
+          payload: "app.js"
+  utter_dockerfile_ready:
+    - text: "Finished! 🎉 Here is your Dockerfile for your Application:"
+
+  # ERROR Handling
+  utter_wrong_dockerfile_type:
+    - text: "🤔 I did not understand that type of dockerfile-type. Please enter **basic** or **multi-stage** or use the predefined template buttons."
+
+  utter_invalid_port:
+    - text: "🤔 Please enter a valid port between 1 and 65535."
+
+  utter_wrong_language:
+    - text: "🤔 I did not understand the language you wih to use. Please enter a valid language or just use one of the available languages shown."
+
+  utter_wrong_package_manager:
+    - text: "🤔 Please select a supported package manager"
+
+  utter_invalid_app_name:
+    - text: "⚠️ The name or images may only contain letters, numbers, underscore (_) and hyphen (-) and no spaces."
+
+  utter_invalid_build_tool:
+    - text: "⚠️ not a valid build tool selected."
