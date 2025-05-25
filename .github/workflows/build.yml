@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkoutt@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -47,7 +47,7 @@ jobs:
           ./scripts/train_model.sh
 
       - name: Upload trained model artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: model
           path: models/*.tar.gz
@@ -59,7 +59,7 @@ jobs:
 
     steps:
       - name: Download trained model artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: model
           path: models
@@ -68,7 +68,7 @@ jobs:
         run: ls -lh models/
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create or update "model-latest" release
         uses: ncipollo/release-action@v1
