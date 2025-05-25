@@ -2,6 +2,7 @@
 OpsPilot is a Rasa Chatbot designed to generate dockerfiles, K8s Manifests and Pipeline Templates
 intelligent, conversation-based chatbot to support developers in DevOps tasks - self-hosted, extensible and specialized in infrastructure-as-code, CI/CD and containerization.
 
+<img src="banner.png" alt="banner"></img>
 ---
 
 This project uses [Poetry](https://python-poetry.org) for dependency management and [Rasa](https://rasa.com) for development for the NLP chatbot.
