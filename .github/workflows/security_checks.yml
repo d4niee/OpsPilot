@@ -8,12 +8,13 @@ on:
 jobs:
   owasp_dependency_check:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Java (for OWASP Dependency-Check)
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: '17'
@@ -26,17 +27,18 @@ jobs:
 
       - name: Run OWASP Dependency-Check
         run: |
+          chmod +x dependency-check/dependency-check/bin/dependency-check.sh
           mkdir -p owasp-report
-          ./dependency-check/bin/dependency-check.sh \
+          dependency-check/dependency-check/bin/dependency-check.sh \
             --project "frontend" \
-            --scan ./frontend \
+            --scan "./frontend" \
             --format "HTML" \
             --format "XML" \
             --format "JSON" \
-            --out owasp-report
+            --out "owasp-report"
 
       - name: Upload OWASP reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
           name: owasp-reports
           path: owasp-report/
