@@ -1,15 +1,13 @@
 name: Train & Publish Model/API
 
-# 1) Trigger
 on:
   push:
     branches:
       - main
 
-# 2) Globale Permissions für Token
 permissions:
-  contents: write     # Checkout, Releases anlegen/updaten
-  packages: write     # Artefakte uploaden & Container im GHCR pushen
+  contents: write
+  packages: write
 
 jobs:
   train_model:
@@ -48,6 +46,10 @@ jobs:
           chmod +x scripts/train_model.sh
           ./scripts/train_model.sh
 
+      - name: retag model
+        run: |
+          mv models/*.tar.gz models/opspilot-latest-model.tar.gz
+
   publish_model:
     name: Publish Latest Model as Release Asset
     needs: train_model
@@ -62,9 +64,9 @@ jobs:
         with:
           tag: model-latest
           name: Latest Trained Model
-          artifacts: 'models/**'
-          allowUpdates: true       # erlaubt Update statt Neu-Release
-          removeArtifacts: true    # löscht alte Assets vor Upload
+          artifacts: 'models/opspilot-latest-model.tar.gz'
+          allowUpdates: true
+          removeArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
   push_rasa_image:
