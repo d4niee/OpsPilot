@@ -128,7 +128,7 @@ The aim of this project is to develop a specialized, contextual chatbot that:
 | **Bot-Framework** | [Rasa Open Source](https://rasa.com) |
 | **Template Engine** | Jinja2 (Dockerfiles, YAML etc.) |
 | **Backend-Logik** | Python (Custom Actions)          |
-| **Frontend**       | React Typescript frontend powered by Vite     |
+| **Frontend**       | React Typescript frontend powered by Vite and bootstrap for styling    |
 | **Deployment**     | Kubernetes (K3s), Helm, Traefik or local with docker |
 | **CI/CD** | GitHub Actions, GitLab CI       |
 
