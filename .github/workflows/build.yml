@@ -1,9 +1,15 @@
 name: Train & Publish Model/API
 
+# 1) Trigger
 on:
   push:
     branches:
       - main
+
+# 2) Globale Permissions für Token
+permissions:
+  contents: write     # Checkout, Releases anlegen/updaten
+  packages: write     # Artefakte uploaden & Container im GHCR pushen
 
 jobs:
   train_model:
@@ -42,16 +48,11 @@ jobs:
           chmod +x scripts/train_model.sh
           ./scripts/train_model.sh
 
-#      - name: Upload trained models
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: models
-#          path: models/
-#          retention-days: 7
   publish_model:
     name: Publish Latest Model as Release Asset
     needs: train_model
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -60,16 +61,21 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: model-latest
-          release_name: "Latest Trained Model"
-          files: |
-            models/**
-          overwrite: true
+          name: Latest Trained Model
+          artifacts: 'models/**'
+          allowUpdates: true       # erlaubt Update statt Neu-Release
+          removeArtifacts: true    # löscht alte Assets vor Upload
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   push_rasa_image:
     name: Push Rasa API Image to GHCR
-    runs-on: ubuntu-latest
     needs: train_model
+    runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -77,14 +83,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull Rasa image from Docker Hub
-        run: docker pull rasa/rasa:3.6.21-full
-
-      - name: Retag for GHCR
+      - name: Pull & Push Rasa Image
         run: |
+          docker pull rasa/rasa:3.6.21-full
+          # hier unter deinem User (github.actor), damit keine Org-Beschränkung greift
           docker tag \
             rasa/rasa:3.6.21-full \
-            ghcr.io/${{ github.repository_owner }}/rasa:3.6.21-full
-
-      - name: Push to GHCR
-        run: docker push ghcr.io/${{ github.repository_owner }}/rasa:3.6.21-full
+            ghcr.io/${{ github.actor }}/rasa:3.6.21-full
+          docker push ghcr.io/${{ github.actor }}/rasa:3.6.21-full
