@@ -5,6 +5,8 @@
 
 Chat Demo: https://chat.daniel-lambrecht-dev.de/
 
+**You need a passwort to access the demo of the bot.**
+
 # OpsPilot
 OpsPilot is a Rasa Chatbot designed to generate dockerfiles, K8s Manifests and Pipeline Templates
 intelligent, conversation-based chatbot to support developers in DevOps tasks - self-hosted, extensible and specialized in infrastructure-as-code, CI/CD and containerization.
