@@ -1,0 +1,15 @@
+digraph DockerfileForm {
+    rankdir=TB;
+    node [shape=box];
+
+    build_type -> language;
+    language -> image_version;
+    image_version -> app_name;
+    app_name -> port;
+
+    language -> package_manager [label="react"];
+    language -> build_tool [label="springboot"];
+    build_tool -> jar_dest [label="springboot"];
+
+    language -> entrypoint [label="nodejs/flask"];
+}

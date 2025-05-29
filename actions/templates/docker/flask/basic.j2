@@ -1,0 +1,6 @@
+FROM python:{{ image_version | default('3.9-slim') }}
+WORKDIR /app  
+COPY . /app  
+RUN pip install -r requirements.txt  
+EXPOSE {{ port | default(5000) }}  
+CMD ["python", "{{ entrypoint | default('app.py') }}"]

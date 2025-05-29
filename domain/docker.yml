@@ -122,6 +122,8 @@ responses:
           payload: "springboot"
         - title: "nodejs"
           payload: "springboot"
+        - title: "Flask"
+          payload: "Flask"
   utter_ask_image_version:
     - text: "What vesion do you want to use for the base image?"
       buttons:
@@ -161,7 +163,7 @@ responses:
         - title: "app.jar"
           payload: "app.jar"
   utter_ask_entrypoint:
-    - text: "What should be the entrypoint?"
+    - text: "What should be the entrypoint? (Or What is the name of your main File (for example main.py or main.js/java etc.))"
       buttons:
         - title: "app.js"
           payload: "app.js"
@@ -186,3 +188,8 @@ responses:
 
   utter_invalid_build_tool:
     - text: "⚠️ not a valid build tool selected."
+  utter_invalid_entrypoint:
+    - text: >
+        The entry point must end with a filename `.py` (for Flask) or `.js` (for Node.js)
+        . For example: `app.py` or `server.js`.
+        Please try again.

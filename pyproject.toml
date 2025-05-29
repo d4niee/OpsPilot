@@ -1,9 +1,9 @@
 [project]
-name = "OpsPilot"
+name = "chatbot-project-wim2"
 version = "0.1.0"
-description = "OpsPilot"
+description = "chatbot project"
 authors = [
-    {name = "Daniel Lambrecht",email = "daniellambrecht10@gmail.com"}
+    {name = "Daniel Lambrecht",email = "daniel.lambrecht@student.reutlingen-university.de"}
 ]
 package-mode = false
 license = {text = "MIT"}

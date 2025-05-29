@@ -17,15 +17,21 @@ intents:
   - generate_kubernetes_deployment
   # pipeline
   - generate_pipeline_manifest
+  # - nlu_fallback
 
 actions:
   - action_generate_dockerfile
-  - validate_dockerfile_form
-  - validate_kubernetes_form
   - action_generate_kubernetes_deployment
   - action_generate_cicd
+  # validations
+  - validate_dockerfile_form
+  - validate_kubernetes_form
+  - validate_cicd_form
+  # - action_default_fallback
 
 responses:
+#  utter_default:
+#    - text: "Sorry, I didn’t get that. Could you rephrase?"
   utter_greet:
     - text: "Hey! How can I help you? 😊"
       buttons:

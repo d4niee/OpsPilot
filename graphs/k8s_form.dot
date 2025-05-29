@@ -1,0 +1,39 @@
+digraph KubernetesForm {
+    rankdir=TB;
+    node [shape=box];
+
+    Basics             [label="Basics\n(app_name, image)"];
+    use_private_registry [label="use_private_registry?"];
+    PrivateRegistry    [label="Private Registry\n(pull secret, registry URL, credentials, email)"];
+    DeploymentParams   [label="Deployment Params\n(replicas, port, env_vars)"];
+    SecretToggle       [label="kubernetes_secret_enabled?"];
+    SecretConfig       [label="App Secret Config\n(secret_name, secrets)"];
+    Resources          [label="Resources\n(CPU_req/max, Mem_req/max, no_root_enabled)"];
+    IngressToggle      [label="kubernetes_ingress_enabled?"];
+    IngressConfig      [label="Ingress Config\n(class, domain, paths)"];
+    TLSToggle          [label="kubernetes_tls_enabled?"];
+    TLSConfig          [label="TLS Config\n(secret_name, issuer)"];
+    End                [label="Finished Manifest"];
+
+    Basics -> use_private_registry;
+
+    use_private_registry -> PrivateRegistry [label="yes"];
+    use_private_registry -> DeploymentParams [label="no"];
+    PrivateRegistry -> DeploymentParams;
+
+    DeploymentParams -> SecretToggle;
+
+    SecretToggle -> SecretConfig [label="yes"];
+    SecretToggle -> Resources    [label="no"];
+    SecretConfig -> Resources;
+
+    Resources -> IngressToggle;
+
+    IngressToggle -> IngressConfig [label="yes"];
+    IngressToggle -> End           [label="no"];
+    IngressConfig -> TLSToggle;
+
+    TLSToggle -> TLSConfig [label="yes"];
+    TLSToggle -> End       [label="no"];
+    TLSConfig -> End;
+}

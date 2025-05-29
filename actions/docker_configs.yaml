@@ -57,3 +57,14 @@ nodejs:
     defaults:
       image_version: 18-alpine
       port: "8080"
+flask:
+  basic:
+    template: docker/flask/basic.j2
+    defaults:
+      image_version: 3.9-slim
+      port: "8080"
+  multi-stage:
+    template: docker/flask/multi_stage.j2
+    defaults:
+      image_version: 3.9-slim
+      port: "5000"

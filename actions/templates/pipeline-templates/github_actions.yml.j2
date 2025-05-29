@@ -45,6 +45,7 @@ jobs:
             docker build -t env.REGISTRY_REPOSITORY_URL:latest --target app .
           fi
 
+  {% if test_stage_enabled | default(false) %}
   test:
     needs: build
     runs-on: ubuntu-latest
@@ -59,7 +60,8 @@ jobs:
         run: docker build -t env.REGISTRY_REPOSITORY_URL:latest --target test .
       - name: Run tests
         run: docker run --rm env.REGISTRY_REPOSITORY_URL:latest
-
+  {% endif %}
+  {% if security_scans_enabled | default(false) %}
   security_owasp:
     needs: [test]
     runs-on: ubuntu-latest
@@ -101,7 +103,8 @@ jobs:
             -Dsonar.host.url=secrets.SONAR_HOST_URL \
             -Dsonar.login=secrets.SONAR_TOKEN \
             -Dsonar.projectKey=secrets.SONAR_PROJECT_KEY
-
+  {% endif %}
+  {% if deploy_stage_enabled | default(false) %}
   deployment:
     needs: [test]
     runs-on: ubuntu-latest
@@ -132,3 +135,4 @@ jobs:
             kubectl apply -f {{ manifests_path }}/prod/ -n {{ namespace }}
           fi
       {% endif %}
+{% endif %}

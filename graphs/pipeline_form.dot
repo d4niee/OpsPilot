@@ -1,0 +1,25 @@
+digraph CICDForm {
+    rankdir=TB;
+    node [shape=box];
+
+    platform -> pipeline_name;
+    pipeline_name -> test_stage_enabled;
+    test_stage_enabled -> security_scans_enabled;
+    security_scans_enabled -> deploy_stage_enabled;
+
+    deploy_stage_enabled -> use_helm [label="yes"];
+    use_helm -> helm_path [label="yes"];
+    use_helm -> manifests_path [label="no"];
+
+    helm_path -> deployment_name;
+    manifests_path -> deployment_name;
+
+    deployment_name -> kubeconfig_path;
+    kubeconfig_path -> kube_context;
+    kube_context -> namespace;
+
+    deploy_stage_enabled -> registry_url [label="no"];
+    namespace -> registry_url;
+
+    registry_url -> registry_repository_url;
+}

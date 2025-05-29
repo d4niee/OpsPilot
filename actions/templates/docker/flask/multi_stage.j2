@@ -1,0 +1,14 @@
+FROM python:{{ image_version | default('3.9-slim') }} AS build
+WORKDIR /app
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+FROM python:{{ image_version | default('3.9-slim') }} as app
+WORKDIR /app
+
+COPY --from=build /usr/local/lib/python*/site-packages /usr/local/lib/python*/site-packages
+COPY . /app
+
+EXPOSE {{ port | default(5000) }}
+CMD ["python", "{{ entrypoint | default('app.py') }}"]

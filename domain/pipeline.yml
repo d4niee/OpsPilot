@@ -3,6 +3,10 @@ version: "3.1"
 entities:
   - platform
   - pipeline_name
+    # stages
+  - test_stage_enabled
+  - security_scans_enabled
+  - deploy_stage_enabled
   - registry_url
   - registry_repository_url
   - deployment_name
@@ -18,6 +22,9 @@ forms:
     required_slots:
       - platform
       - pipeline_name
+      - test_stage_enabled
+      - security_scans_enabled
+      - deploy_stage_enabled
       - registry_url
       - registry_repository_url
       - deployment_name
@@ -44,6 +51,30 @@ slots:
         conditions:
           - active_loop: cicd_form
             requested_slot: pipeline_name
+
+  test_stage_enabled:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: test_stage_enabled
+
+  security_scans_enabled:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: security_scans_enabled
+
+  deploy_stage_enabled:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: cicd_form
+            requested_slot: deploy_stage_enabled
 
   registry_url:
     type: text
@@ -130,16 +161,16 @@ responses:
     - text: "What should the pipeline be named?"
 
   utter_ask_registry_url:
-    - text: "What is the registry URL?"
+    - text: "What is the registry URL? (for example https://gitlab.com)"
 
   utter_ask_registry_repository_url:
-    - text: "What is the full repository URL?"
+    - text: "What is the full repository URL to your Container? (example: https://gitlab.com/name/repo/my-container:latest)"
 
   utter_ask_deployment_name:
     - text: "What should the deployment be called?"
 
   utter_ask_helm_path:
-    - text: "Where is the Helm chart located (path)?"
+    - text: "Where is the Helm chart located (path in your Repository)?"
       buttons:
         - title: "./helm"
           payload: "./helm"
@@ -176,5 +207,46 @@ responses:
         - title: "default"
           payload: "default"
 
+  utter_ask_test_stage_enabled:
+    - text: "Do you want to include a test stage? (yes/no)"
+      buttons:
+        - title: "yes"
+          payload: "yes"
+        - title: "no"
+          payload: "no"
+
+  utter_ask_security_scans_enabled:
+    - text: "Do you want to include security scans? (yes/no)"
+      buttons:
+        - title: "yes"
+          payload: "yes"
+        - title: "no"
+          payload: "no"
+
+  utter_ask_deploy_stage_enabled:
+    - text: "Do you want to include a deployment stage? (yes/no)"
+      buttons:
+        - title: "yes"
+          payload: "yes"
+        - title: "no"
+          payload: "no"
+
   utter_cicd_ready:
     - text: "Your CI/CD manifest is ready!"
+  
+  # ERROR Handling
+  utter_invalid_platform:
+    - text: "🤔 At this point i don't know this platform. Please use 'Github' or 'Gitlab'"
+  utter_invalid_pipeline_or_deployment_name:
+    - text: "⚠️ The name may only contain letters, numbers, underscore (_) and hyphen (-) and no spaces."
+  utter_invalid_registry_url:
+    - text: "🤔 I'm sorry, please provide a valid registry url with the correct HTTP(S) Pattern (f.e. https://gitlab.com)"
+  utter_invalid_path:
+    - text: "⚠️ I'm Sorry but this is not a valid path. please provide a valid path to the desired location in your Repo or use one of the template paths."
+  utter_invalid_context:
+    - text: "⚠️ The Kubernetes Context may only contain letters, numbers, underscore (_) and hyphen (-) and no spaces."
+  utter_invalid_namespace:
+    - text: "⚠️ The namespace name may only contain letters, numbers, underscore (_) and hyphen (-) and no spaces."
+  
+  utter_invalid_boolean:
+    - text: "Pls answer with 'yes' or 'no'."

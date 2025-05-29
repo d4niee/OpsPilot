@@ -6,7 +6,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import AllSlotsReset, ActiveLoop
 from jinja2 import Environment, FileSystemLoader
 
-from actions.forms import ValidatePipelineForm
+from actions.forms import ValidateCICDForm
 
 class ActionGeneratePipelineManifest(Action):
     def name(self) -> Text:
@@ -22,9 +22,10 @@ class ActionGeneratePipelineManifest(Action):
         # All required slots have already been validated by ValidatePipelineForm
         platform              = tracker.get_slot("platform")             # 'github' or 'gitlab'
         pipeline_name         = tracker.get_slot("pipeline_name") or "default-pipeline"
+        test_stage_enabled    = tracker.get_slot("test_stage_enabled")
+        security_scans_enabled = tracker.get_slot("security_scans_enabled")
+        deploy_stage_enabled = tracker.get_slot("deploy_stage_enabled")
         registry_url          = tracker.get_slot("registry_url")
-        registry_username     = tracker.get_slot("registry_username")
-        registry_password     = tracker.get_slot("registry_password")
         registry_repository_url = tracker.get_slot("registry_repository_url")
         deployment_name       = tracker.get_slot("deployment_name")
         helm_path             = tracker.get_slot("helm_path")
@@ -38,9 +39,10 @@ class ActionGeneratePipelineManifest(Action):
         context = {
             "platform": platform,
             "pipeline_name": pipeline_name,
+            "test_stage_enabled": test_stage_enabled,
+            "security_scans_enabled": security_scans_enabled,
+            "deploy_stage_enabled": deploy_stage_enabled,
             "registry_url": registry_url,
-            "registry_username": registry_username,
-            "registry_password": registry_password,
             "registry_repository_url": registry_repository_url,
             "deployment_name": deployment_name,
             "helm_path": helm_path,

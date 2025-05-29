@@ -62,3 +62,19 @@ rules:
   steps:
     - intent: ask_pipelines
     - action: utter_ask_pipelines
+
+- rule: Submit dockerfile
+  condition:
+    - active_loop: dockerfile_form
+  steps:
+    - action: action_deactivate_loop
+    - action: action_generate_dockerfile
+    - action: utter_dockerfile_ready
+
+- rule: Submit kubernetes manifest
+  condition:
+    - active_loop: kubernetes_form
+  steps:
+    - action: action_deactivate_loop
+    - action: action_generate_kubernetes_deployment
+    - action: utter_kubernetes_ready

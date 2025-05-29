@@ -1,0 +1,43 @@
+digraph RasaBotFlow {
+    rankdir=LR;
+    node [shape=ellipse, style=filled, fillcolor="#E6F2FF"];
+
+    subgraph cluster_forms {
+        label = "Forms";
+        style = dashed;
+        node [shape=box, style=filled, fillcolor="#FFF3CD"];
+        dockerfile_form;
+        kubernetes_form;
+        cicd_form;
+    }
+
+    subgraph cluster_actions {
+        label = "Actions";
+        style = dashed;
+        node [shape=box, style=filled, fillcolor="#D4EDDA"];
+        action_generate_dockerfile;
+        action_generate_kubernetes_deployment;
+        action_generate_cicd;
+    }
+
+    // Basic intents
+    greet -> utter_greet;
+    goodbye -> utter_goodbye;
+    bot_challenge -> utter_iamabot;
+    thanks -> utter_thanks;
+    mood_great -> utter_mood_great;
+    mood_unhappy -> utter_mood_unhappy;
+    ask_name -> utter_ask_name;
+    ask_help -> utter_ask_help;
+    ask_capabilities -> utter_ask_capabilities;
+
+    // Core processes
+    generate_dockerfile -> dockerfile_form;
+    dockerfile_form -> action_generate_dockerfile;
+
+    generate_kubernetes_deployment -> kubernetes_form;
+    kubernetes_form -> action_generate_kubernetes_deployment;
+
+    generate_pipeline_manifest -> cicd_form;
+    cicd_form -> action_generate_cicd;
+}

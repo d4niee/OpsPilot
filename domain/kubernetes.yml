@@ -433,3 +433,18 @@ responses:
   
   utter_invalid_secret_name:
     - text: "🤔 I'm sorry, please provide a valid secret name with alphanumeric characters and '-', '_' but without special characters or spaces"
+  
+  utter_invalid_env:
+    - text: "🤔 The environment variables must be passed in the format
+        `name=value,name2=value2,...`.
+        Or enter `skip` to skip the step.
+        Example: `PORT=8080,DEBUG=true,MODE=prod`.
+        Please try again."
+
+  utter_invalid_container_image:
+    - text: >
+        Please enter a valid container image name,
+        either an official image like `nginx:latest`
+        or a registry URL like
+        `registry.example.com/repo/image:tag`.
+        Try again.

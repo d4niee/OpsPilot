@@ -1,9 +1,14 @@
 stages:
   - build
+{% if test_stage_enabled | default(false) %}
   - test
+{% endif %}
+{% if security_scans_enabled | default(false) %}
   - security_scans
+{% endif %}
+{% if deploy_stage_enabled | default(false) %}
   - deployment
-
+{% endif %}
 "🔨 Build":
   stage: build
   before_script:
@@ -25,7 +30,7 @@ stages:
       fi
   rules:
     - if: $CI_PIPELINE_SOURCE == 'push' || $CI_PIPELINE_SOURCE == 'merge_request_event'
-
+{% if test_stage_enabled | default(false) %}
 "🧪 Test":
   stage: test
   variables:
@@ -38,7 +43,8 @@ stages:
     - docker run --rm {{ registry_repository_url }}:$CI_COMMIT_SHORT_SHA
   rules:
     - if: $CI_PIPELINE_SOURCE == 'push' || $CI_PIPELINE_SOURCE == 'merge_request_event'
-
+{% endif %}
+{% if security_scans_enabled | default(false) %}
 "🔒 OWASP Dependency Check":
   stage: security_scans
   image:
@@ -68,7 +74,6 @@ stages:
   allow_failure: true
   rules:
     - if: $CI_COMMIT_REF_NAME == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
-
 "🔒 Sonarqube Quality Check":
   stage: security_scans
   image:
@@ -87,7 +92,8 @@ stages:
   allow_failure: true
   rules:
     - if: $CI_COMMIT_REF_NAME == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
-
+{% endif %}
+{% if deploy_stage_enabled | default(false) %}
 "🚀 Deployment":
   stage: deployment
   image: dtzar/helm-kubectl
@@ -116,3 +122,4 @@ stages:
   only:
     - main
     - tags
+{% endif %}
