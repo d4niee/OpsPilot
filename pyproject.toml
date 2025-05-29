@@ -8,7 +8,7 @@ authors = [
 package-mode = false
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.8,<3.11"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "rasa (>=3.6.21,<4.0.0)",
     "jinja2 (>=3.1.6,<4.0.0)",
