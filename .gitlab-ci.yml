@@ -24,7 +24,7 @@ Build_Frontend:
 
 train_model:
   stage: train
-  image: python:3.10
+  image: python:3.13
   before_script:
     - apt-get update && apt-get install -y git
     - pip install poetry
